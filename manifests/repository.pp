@@ -38,18 +38,14 @@
 #
 
 define composer::repository (
-  $ensure = present,
-  $type   = undef,
-  $url    = undef,
-  $target = undef,
-  $global = false,
-  $user   = 'root',
+  Enum['present','absent']                $ensure = present,
+  Enum['composer','vcs','pear','package'] $type   = undef,
+  Boolean                                 $global = false,
+  $url                                            = undef,
+  $target                                         = undef,
+  $user                                           = 'root',
 ) {
   include composer
-
-  validate_re($ensure, '^(present|absent)$', 'composer::repository::ensure must be one of present or absent.')
-  validate_re($type, '^(composer|vcs|pear|package)$', 'composer::repository::type must be one of composer, vcs, pear or package.')
-  validate_bool($global)
 
   if !$url {
     fail('composer::repository::url must be set')

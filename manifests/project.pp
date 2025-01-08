@@ -50,22 +50,18 @@
 #
 
 define composer::project (
-  $ensure      = present,
-  $source      = undef,
-  $target      = $title,
-  $dev         = false,
-  $prefer      = 'dist',
-  $scripts     = true,
-  $custom_inst = true,
-  $lock        = false,
-  $user        = 'root',
-  $php_bin     = '',
+  Enum['present','installed','latest'] $ensure      = present,
+  Enum['dist','source']                $prefer      = 'dist',
+  Boolean                              $dev         = false,
+  Boolean                              $scripts     = true,
+  Boolean                              $custom_inst = true,
+  $source                                           = undef,
+  $target                                           = $title,
+  $lock                                             = false,
+  $user                                             = 'root',
+  $php_bin                                          = '',
 ) {
   include composer
-
-  validate_re($ensure, '^(present|installed|latest)$', '$ensure must be one of present or latest.')
-  validate_re($prefer, '^(dist|source)$', '$prefer can only be one of source or dist. See `composer install --help`.')
-  validate_bool($dev, $scripts, $custom_inst)
 
   $composer  = strip("${php_bin} ${composer::target_dir}/${composer::command_name}")
   $base_opts = '--no-interaction --quiet --no-progress'
